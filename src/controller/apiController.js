@@ -31,7 +31,26 @@
          })
      }
  }
+ const handleLogin = async (req, res) => {
+     try {
+        let data =await loginRegisterService.handleLogin(req.body);
+        
+         return res.status(200).json({
+         EM:data.EM,
+         EC:data.EC,
+         DT:data.DT
+     })
+     } catch (error) {
+        return res.status(500).json({
+             EM: 'error from server', // error message
+             EC: -1, //error code
+             DT: "", //data
+         })
+     }
+    
+ }
  export default {
      testApi,
-     handleRegister
+     handleRegister,
+     handleLogin
  }

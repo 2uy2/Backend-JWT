@@ -1,8 +1,8 @@
 import userApiService from "../service/userApiService.js"
 const readFunc = async (req, res) => {
     try {
-        let data = await userApiService.getAllUser()
-        return res.status(400).json({
+        let data = await userApiService.getAllUser(req, res)
+        return res.status(200).json({
             EM: data.EM,
             EC: data.EC,
             DT: data.DT

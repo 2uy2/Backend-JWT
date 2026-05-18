@@ -1,4 +1,5 @@
 import db from '../models/index.js'
+import User from '../models/User.js';
 
 const getAllUser = async () => {
 
@@ -36,7 +37,39 @@ const getAllUser = async () => {
         }
     }
 }
+const getUserWithPagination = async (page, limit) => {
+    try {
+        let offset = (page - 1) * limit; //tính phần bỏ qua(offset)
+        const {
+            count,
+            rows
+        } = await User.findAndCountAll({ // count trả về số lượng, rows trả ra data
+            offset: offset,
+            limit: limit
+        })
+        let totalPages = Math.ceil(count / limit)
+        let data = {
+            totalRows: count,
+            totalPages: totalPages,
+            users: rows
 
+        };
+
+        console.log("check data", data)
+
+        return {
+            EM: "oke",
+            EC: 0,
+            DT: data,
+        }
+    } catch (error) {
+        return {
+            EM: "some thing wrong from service",
+            EC: -1,
+            DT: [],
+        }
+    }
+}
 const createNewUser = async () => {
     try {
         await db.User.create({
@@ -53,13 +86,13 @@ const createNewUser = async () => {
 const updateUser = async (data) => {
     try {
         let user = db.User.findOne({
-            where:{id:data.id}
+            where: {
+                id: data.id
+            }
         })
-        if(user){
+        if (user) {
             user.save()
-        }
-        else{
-        }
+        } else {}
     } catch (error) {
         return {
             EM: "wrong from service",
@@ -72,7 +105,9 @@ const updateUser = async (data) => {
 const deleteUser = async (id) => {
     try {
         await db.User.delete({
-            where:{id:id}
+            where: {
+                id: id
+            }
         })
     } catch (error) {
         return {
@@ -87,5 +122,6 @@ export default {
     getAllUser,
     updateUser,
     createNewUser,
-    deleteUser
+    deleteUser,
+    getUserWithPagination
 }
